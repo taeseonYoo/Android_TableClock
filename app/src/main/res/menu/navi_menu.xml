@@ -2,19 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/item_info"
-        android:title="내 정보" />
+        android:id="@+id/item_color"
+        android:title="글자 색 변경" >
+    </item>
     <item
-        android:id="@+id/item_report"
-        android:title="리포트" />
+        android:id="@+id/item_timer"
+        android:title="타이머 모드 변경" />
     <item
-        android:id="@+id/item_setting"
-        android:title="계정 설정" />
+        android:id="@+id/item_textSize"
+        android:title="텍스트 사이즈 변경" />
     <item
-        android:id="@+id/item_notice"
-        android:title="공지사항" />
-    <item
-        android:id="@+id/item_service_center"
-        android:title="고객센터" />
+        android:id="@+id/item_record"
+        android:title="나의 기록 확인하기" />
+
 
 </menu>
