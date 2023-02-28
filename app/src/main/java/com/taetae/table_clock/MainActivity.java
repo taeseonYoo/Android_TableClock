@@ -7,9 +7,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +22,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,15 +35,36 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout h_layout;
     NavigationView view1;
     DrawerLayout dl1;
-
+    SeekBar textSize;
+    View innerView;
+    boolean flag;
+    AlertDialog.Builder dlg;
+    TextClock tc_ap,tc_tm;
+    int size_basic;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Resources r = Resources.getSystem();
+        Configuration config = r.getConfiguration();
+        if( config.orientation == Configuration.ORIENTATION_LANDSCAPE ) {
+            flag = false;
+        }
+        else {
+            flag = true;
+        }
 
         dl1 = findViewById(R.id.main_layout);
         view1 = findViewById(R.id.navigationView);
         h_layout = findViewById(R.id.height_layout);
+        tc_ap = findViewById(R.id.clock_ap);
+        tc_tm = findViewById(R.id.clock_time);
+        innerView = getLayoutInflater().inflate(R.layout.seek_bar,null);
+        dlg = new AlertDialog.Builder(MainActivity.this);
+        dlg.setTitle("Choose textSize");
+        dlg.setView(innerView);
+        textSize = innerView.findViewById(R.id.SeekBar_tSize);
+        textSize.setProgress(size_basic);
 
 
         h_layout.setOnClickListener(new View.OnClickListener() {
@@ -66,10 +93,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         builder.show();
-
+                        return true;
+                    case R.id.item_textSize:
+                        dialogSeekbar();
                         return true;
                     case R.id.item_timer:
-                    case R.id.item_textSize:
+                        // pm am 을 삭제하는 코드 , 아직 미 완성h_layout.removeView(tc_ap);
                     case R.id.item_record:
 
                 }
@@ -77,6 +106,66 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+    public void dialogSeekbar(){
+        innerView = getLayoutInflater().inflate(R.layout.seek_bar,null);
+        dlg = new AlertDialog.Builder(MainActivity.this);
+        dlg.setTitle("Choose textSize");
+        dlg.setView(innerView);
+        textSize = innerView.findViewById(R.id.SeekBar_tSize);
+        if(flag== true){textSize.setMax(97);}
+        else textSize.setMax(150);
+        textSize.setProgress(size_basic);
+        textSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                size_basic = progress;
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                tc_tm.setTextSize(TypedValue.COMPLEX_UNIT_DIP,size_basic);
+                tc_ap.setTextSize(TypedValue.COMPLEX_UNIT_DIP,size_basic-30);
+                Toast.makeText(MainActivity.this, Integer.toString(size_basic), Toast.LENGTH_SHORT).show();
+            }
+        });
+        dlg.show();
+
+
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        switch(newConfig.orientation){
+            case Configuration.ORIENTATION_PORTRAIT:
+                if(size_basic>=98){
+                    tc_tm.setTextSize(TypedValue.COMPLEX_UNIT_DIP,50);
+                    tc_ap.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);
+                    size_basic = 50;
+                    textSize.setProgress(size_basic);
+                }
+                flag = true;
+                break;
+            case Configuration.ORIENTATION_LANDSCAPE:
+                flag = false;
+                break;
+
+
+        }
 
 
     }
