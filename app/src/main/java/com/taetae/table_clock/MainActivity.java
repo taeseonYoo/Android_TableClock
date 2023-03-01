@@ -6,6 +6,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar textSize;
     View innerView;
     boolean flag;
+    boolean check_p;
     AlertDialog.Builder dlg;
     TextClock tc_ap,tc_tm;
     int size_basic;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         dlg.setView(innerView);
         textSize = innerView.findViewById(R.id.SeekBar_tSize);
         textSize.setProgress(size_basic);
-
+        check_p = false;
 
         h_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,9 +100,21 @@ public class MainActivity extends AppCompatActivity {
                         dialogSeekbar();
                         return true;
                     case R.id.item_timer:
-                        // pm am 을 삭제하는 코드 , 아직 미 완성h_layout.removeView(tc_ap);
+                        break;
                     case R.id.item_record:
-
+                        break;
+                    case R.id.item_elim:
+                        if(!check_p){
+                            h_layout.removeView(tc_ap);
+                            check_p = true;
+                        }
+                        else{
+                            h_layout.removeView(tc_tm);
+                            h_layout.addView(tc_ap);
+                            h_layout.addView(tc_tm);
+                            check_p = false;
+                        }
+                        break;
                 }
                 return false;
             }
