@@ -17,6 +17,8 @@
     <item
         android:id="@+id/item_elim"
         android:title="AM,PM"/>
-
+    <item
+        android:id="@+id/item_bright"
+        android:title="밝기 조절"/>
 
 </menu>

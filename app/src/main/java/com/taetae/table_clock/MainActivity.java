@@ -9,18 +9,21 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -36,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout h_layout;
     NavigationView view1;
     DrawerLayout dl1;
-    SeekBar textSize;
-    View innerView;
+    SeekBar textSize,brightLevel;
+    View innerView,brightView;
     boolean flag;
     boolean check_p;
-    AlertDialog.Builder dlg;
+    AlertDialog.Builder dlg, dlg2;
     TextClock tc_ap,tc_tm;
     int size_basic;
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
                             check_p = false;
                         }
                         break;
+                    case R.id.item_bright:
+                        dialogBright();
+                        break;
                 }
                 return false;
             }
@@ -123,6 +129,38 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public void dialogBright(){
+        brightView = getLayoutInflater().inflate(R.layout.bright_seekbar,null);
+        dlg2 = new AlertDialog.Builder(MainActivity.this);
+        dlg2.setTitle("밝기 조절");
+        dlg2.setView(brightView);
+        brightLevel = brightView.findViewById(R.id.SeekBar_bright);
+
+        brightLevel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                if(progress<10) progress = 10;
+                else if(progress>255) progress = 255;
+                params.screenBrightness = progress/(float)255;
+                getWindow().setAttributes(params);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        dlg2.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        dlg2.show();
+
+    }
+
     public void dialogSeekbar(){
         innerView = getLayoutInflater().inflate(R.layout.seek_bar,null);
         dlg = new AlertDialog.Builder(MainActivity.this);
