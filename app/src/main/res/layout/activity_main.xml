@@ -27,6 +27,7 @@
             android:textStyle="bold"
             android:layout_gravity="center"
             android:id="@+id/clock_ap"
+            android:textColor="@color/black"
             />
         <TextClock
             android:layout_width="wrap_content"
@@ -38,6 +39,7 @@
             android:padding="10dp"
             android:layout_gravity="center"
             android:id="@+id/clock_time"
+            android:textColor="@color/black"
             />
 
     </LinearLayout>

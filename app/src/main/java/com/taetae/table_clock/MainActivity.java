@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout dl1;
     SeekBar textSize,brightLevel;
     View innerView,brightView;
+    Menu menu;
     boolean flag;
     boolean check_p;
     AlertDialog.Builder dlg, dlg2;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Resources r = Resources.getSystem();
         Configuration config = r.getConfiguration();
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         textSize = innerView.findViewById(R.id.SeekBar_tSize);
         textSize.setProgress(size_basic);
         check_p = false;
+
+
 
         h_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +125,30 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.item_bright:
                         dialogBright();
                         break;
+                    case R.id.item_dark:
+                        menu = view1.getMenu(); //네비게이션 뷰에 붙어있는 메뉴를 가져온다.
+                        if(menu.findItem(R.id.item_dark).getTitle().equals("다크 모드")){ //현재 다크 모드
+                            menu.findItem(R.id.item_dark).setTitle("라이트 모드");
+                            h_layout.setBackgroundColor(Color.BLACK);
+                            if(tc_ap.getCurrentTextColor()==Color.BLACK){
+                                tc_ap.setTextColor(Color.WHITE);
+                            }
+                            if(tc_tm.getCurrentTextColor()==Color.BLACK){
+                                tc_tm.setTextColor(Color.WHITE);
+                            }
+                        }
+                        else{    //현재 라이트 모드 일때
+                            menu.findItem(R.id.item_dark).setTitle("다크 모드");
+                            h_layout.setBackgroundColor(Color.WHITE);
+                            if(tc_ap.getCurrentTextColor()==Color.WHITE){
+                                tc_ap.setTextColor(Color.BLACK);
+                            }
+                            if(tc_tm.getCurrentTextColor()==Color.WHITE){
+                                tc_tm.setTextColor(Color.BLACK);
+                            }
+                        }
+                        break;
+
                 }
                 return false;
             }

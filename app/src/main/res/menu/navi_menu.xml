@@ -20,5 +20,8 @@
     <item
         android:id="@+id/item_bright"
         android:title="밝기 조절"/>
+    <item
+        android:id="@+id/item_dark"
+        android:title="다크 모드"/>
 
 </menu>
