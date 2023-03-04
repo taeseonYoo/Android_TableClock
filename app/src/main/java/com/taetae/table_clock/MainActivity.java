@@ -26,6 +26,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         h_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
                         dialogSeekbar();
                         return true;
                     case R.id.item_timer:
+                        Intent intent = new Intent(MainActivity.this, TimerActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                     case R.id.item_record:
                         break;
