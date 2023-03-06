@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/item_color"
-        android:title="글자 색 변경" >
+
+    <item android:title="설정"
+        >
+        <menu>
+            <item
+                android:id="@+id/item_color"
+                android:icon="@drawable/ic_setting"
+                android:title="글자 색 변경" >
+            </item>
+            <item
+                android:id="@+id/item_textSize"
+                android:icon="@drawable/ic_color"
+                android:title="텍스트 사이즈 변경" />
+            <item
+                android:id="@+id/item_elim"
+                android:icon="@drawable/ic_turn"
+                android:title="AM,PM"/>
+            <item
+                android:id="@+id/item_bright"
+                android:icon="@drawable/ic_light"
+                android:title="밝기 조절"/>
+            <item
+                android:id="@+id/item_dark"
+                android:icon="@drawable/ic_dark"
+                android:title="다크 모드"/>
+        </menu>
     </item>
-    <item
-        android:id="@+id/item_textSize"
-        android:title="텍스트 사이즈 변경" />
-    <item
-        android:id="@+id/item_timer"
-        android:title="타이머 모드 변경" />
-    <item
-        android:id="@+id/item_record"
-        android:title="나의 기록 확인하기" />
-    <item
-        android:id="@+id/item_elim"
-        android:title="AM,PM"/>
-    <item
-        android:id="@+id/item_bright"
-        android:title="밝기 조절"/>
-    <item
-        android:id="@+id/item_dark"
-        android:title="다크 모드"/>
+
+    <item android:title="추가 기능">
+        <menu>
+            <item
+                android:id="@+id/item_timer"
+                android:icon="@drawable/ic_timer"
+                android:title="타이머 모드 변경" />
+            <item
+                android:id="@+id/item_record"
+                android:icon="@drawable/ic_data"
+                android:title="나의 기록 확인하기" />
+        </menu>
+    </item>
+
+
 
 </menu>
