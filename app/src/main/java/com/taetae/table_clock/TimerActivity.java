@@ -1,8 +1,12 @@
 package com.taetae.table_clock;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -90,20 +94,62 @@ public class TimerActivity extends AppCompatActivity {
         //chronometer works like this  (nr_of_min * 60000 + nr_of_sec * 1000)
 
         btn_back.setOnClickListener(new View.OnClickListener() {  //액티비티 전환
+            long tmp,tmp2,tmp3;
             @Override
             public void onClick(View v) {
                 if(saveTime!=0){ //When data remains ,saving the data in the dialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this);
+                    builder.setTitle("Save Data");
+                    builder.setIcon(R.drawable.ic_save);
+                    tmp = saveTime/60000;
+                    tmp2 = saveTime%60000/1000;
+                    if(tmp>60){
+                        tmp3=tmp/60;
+                        tmp%=60;
 
+                        builder.setMessage("저장 할 데이터 : "+String.format("%02d",tmp3)+"시간"+String.format("%02d",tmp)+"분"+String.format("%02d",tmp2)+"초");
+
+                    }
+                    else{
+                        builder.setMessage("저장 할 데이터 : "+String.format("%02d",tmp)+"분"+String.format("%02d",tmp2)+"초");
+                    }
+                    builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+
+                            returnActivity();
+                        }
+                    });
+                    builder.setNegativeButton("저장하지 않기", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                            returnActivity();
+                        }
+                    });
+                    builder.setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //pass
+                        }
+                    });
+
+                    builder.show();
                 }
-
-
-                Intent intent = new Intent(TimerActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+                else{
+                    returnActivity();
+                }
 
             }
         });
 
-
+    }
+    public void returnActivity(){
+        Intent intent = new Intent(TimerActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

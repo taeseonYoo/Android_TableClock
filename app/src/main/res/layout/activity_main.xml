@@ -41,6 +41,7 @@
             android:layout_gravity="center"
             android:id="@+id/clock_ap"
             android:textColor="@color/black"
+            android:fontFamily="@font/gmarketbold"
             />
         <TextClock
             android:layout_width="wrap_content"
@@ -53,6 +54,7 @@
             android:layout_gravity="center"
             android:id="@+id/clock_time"
             android:textColor="@color/black"
+            android:fontFamily="@font/gmarketbold"
             />
 
     </LinearLayout>
@@ -65,6 +67,7 @@
         android:id="@+id/navigationView"
         app:menu="@menu/navi_menu"
         app:headerLayout="@layout/navi_header"
+        app:itemTextAppearance="@style/customTextViewFontStyle"
         >
     </com.google.android.material.navigation.NavigationView>
 
