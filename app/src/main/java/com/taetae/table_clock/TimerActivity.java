@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class TimerActivity extends AppCompatActivity {
     Button btn_start,btn_stop,btn_reset,btn_back;
@@ -86,14 +87,20 @@ public class TimerActivity extends AppCompatActivity {
             }
         });
 
-
+        //chronometer works like this  (nr_of_min * 60000 + nr_of_sec * 1000)
 
         btn_back.setOnClickListener(new View.OnClickListener() {  //액티비티 전환
             @Override
             public void onClick(View v) {
+                if(saveTime!=0){ //When data remains ,saving the data in the dialog
+
+                }
+
+
                 Intent intent = new Intent(TimerActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
+
             }
         });
 

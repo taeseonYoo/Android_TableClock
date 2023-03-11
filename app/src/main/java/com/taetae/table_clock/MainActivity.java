@@ -6,13 +6,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
@@ -25,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -43,10 +47,11 @@ public class MainActivity extends AppCompatActivity {
     SeekBar textSize,brightLevel;
     View innerView,brightView;
     Menu menu;
-    boolean flag;
-    boolean check_p;
     AlertDialog.Builder dlg, dlg2;
     TextClock tc_ap,tc_tm;
+    ImageView ivBattery;
+    boolean flag;
+    boolean check_p;
     int size_basic;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         textSize = innerView.findViewById(R.id.SeekBar_tSize);
         textSize.setProgress(size_basic);
         check_p = false;
-
-
+        ivBattery = findViewById(R.id.ivBattery);
 
 
 
@@ -256,5 +260,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    BroadcastReceiver br = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = context.registerReceiver(null, iFilter);
 
+            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING;
+
+            if(isCharging==true){ //if battery is charging, show on charging image.
+                ivBattery.setImageResource(R.drawable.stat_sys_battery_charge_anim5);
+            }
+            else{  //Battery is not charging.
+                if(action.equals(Intent.ACTION_BATTERY_CHANGED)){  //detect battery changing
+                    int remain = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
+                    if(remain>=95) ivBattery.setImageResource(R.drawable.stat_sys_battery_100);
+                    else if(remain>=80) ivBattery.setImageResource(R.drawable.stat_sys_battery_80);
+                    else if(remain>=60) ivBattery.setImageResource(R.drawable.stat_sys_battery_60);
+                    else if(remain>=40) ivBattery.setImageResource(R.drawable.stat_sys_battery_40);
+                    else ivBattery.setImageResource(R.drawable.stat_sys_battery_20);
+
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(br);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter iFi = new IntentFilter();
+        iFi.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(br,iFi);
+    }
 }
