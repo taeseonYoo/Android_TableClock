@@ -1,9 +1,11 @@
 package com.taetae.table_clock;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -12,14 +14,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,16 +47,22 @@ import com.google.android.material.navigation.NavigationView;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.listeners.ColorListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE = 0;
     LinearLayout h_layout;
     NavigationView view1;
     DrawerLayout dl1;
     SeekBar textSize,brightLevel;
-    View innerView,brightView;
+    View innerView,brightView,headerView;
     Menu menu;
     AlertDialog.Builder dlg, dlg2;
     TextClock tc_ap,tc_tm;
-    ImageView ivBattery;
+    ImageView ivBattery,myImage;
+    Bitmap img;
     boolean flag;
     boolean check_p;
     int size_basic;
@@ -80,6 +93,22 @@ public class MainActivity extends AppCompatActivity {
         textSize.setProgress(size_basic);
         check_p = false;
         ivBattery = findViewById(R.id.ivBattery);
+
+        headerView = view1.getHeaderView(0);
+        myImage = headerView.findViewById(R.id.iv_image);
+
+        myImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 Intent intent = new Intent(Intent.ACTION_PICK);
+                 intent.setType("image/*");
+                 intent.setAction(Intent.ACTION_GET_CONTENT);
+                 startActivityForResult(intent,REQUEST_CODE);
+
+
+            }
+        });
+
 
 
 
@@ -163,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
 
 
     }
@@ -291,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(br);
+        saveState();
     }
 
     @Override
@@ -299,5 +328,49 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter iFi = new IntentFilter();
         iFi.addAction(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(br,iFi);
+        restoreState();
+    }
+    protected void saveState(){
+
+        if(img != null) {
+            ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+            img.compress(Bitmap.CompressFormat.PNG, 70, baos1);
+            byte[] bytes1 = baos1.toByteArray();
+            String temp1 = Base64.encodeToString(bytes1, Base64.DEFAULT);
+            SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("imgSave", temp1);
+            editor.commit();
+        }
+
+    }
+    protected void restoreState(){
+        SharedPreferences pref = getSharedPreferences("pref",Activity.MODE_PRIVATE);
+        if(pref!=null && pref.contains("imgSave")){
+            String temp2 = pref.getString("imgSave","");
+            byte[] encodeByte1 = Base64.decode(temp2, Base64.DEFAULT);
+            Bitmap bitmap2 = BitmapFactory.decodeByteArray(encodeByte1, 0, encodeByte1.length);
+            myImage.setImageBitmap(bitmap2);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+                    img = BitmapFactory.decodeStream(in);
+                    in.close();
+                    myImage.setImageBitmap(img);
+                } catch (Exception e) {
+
+                }
+            }
+        }
+
     }
 }
